@@ -12,6 +12,7 @@ requests = "^2.25.1"
 psycopg2-binary = "^2.8.6"
 geocoder = "^1.38.1"
 psycopg2 = "^2.8.6"
+coloredlogs = "^15.0"
 
 [tool.poetry.dev-dependencies]
 
