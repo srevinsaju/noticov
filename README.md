@@ -9,3 +9,9 @@ Otherwise, take a look at `pip` package of `poetry`.
 ```bash
 poetry shell 
 ```
+
+
+## License 
+
+This project is licensed under the `MIT License` 2021. See [LICENSE](./LICENSE) 
+for more information.
