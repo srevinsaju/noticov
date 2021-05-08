@@ -1,4 +1,3 @@
-
 import os
 import time
 
@@ -11,10 +10,11 @@ from noticov.exceptions import DBStringNotFound
 
 
 class NotiCovBackend:
-    def __init__(self,
-                 connection: BaseConnection = None,
-                 sleep: int = 60 * 60,
-                 ):
+    def __init__(
+        self,
+        connection: BaseConnection = None,
+        sleep: int = 60 * 60,
+    ):
         self.sleep = sleep
         self.conn = connection
         if connection is None:
@@ -28,7 +28,6 @@ class NotiCovBackend:
         """
         ind_covid_api = IndiaDistrictsCovidApi()
 
-
     def start(self):
         while True:
             try:
@@ -38,14 +37,15 @@ class NotiCovBackend:
                 return
 
 
-
 def main():
     load_dotenv()
 
     db_string = os.getenv("DB_STRING")
     if not db_string:
-        raise DBStringNotFound("$DB_STRING is not defined in the environment. Please define it with"
-                               "DB_STRING=\"...\" python3 -m noticov to run this software")
+        raise DBStringNotFound(
+            "$DB_STRING is not defined in the environment. Please define it with"
+            'DB_STRING="..." python3 -m noticov to run this software'
+        )
 
     try:
         sleep_time = int(os.getenv("SLEEP_TIME") or 60 * 60)
@@ -57,9 +57,3 @@ def main():
 
     ncb = NotiCovBackend(connection=psql, sleep=sleep_time)
     ncb.start()
-
-
-
-
-
-

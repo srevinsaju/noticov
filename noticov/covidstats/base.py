@@ -1,9 +1,8 @@
-
-
 class BaseCovidApi:
     """
     A base class for Covid API. The location is set to none
     """
+
     location: str = None  # "global", "india"
     canonical_url: str = None  # the endpoint of the api
 

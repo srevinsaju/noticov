@@ -28,7 +28,7 @@ class IndiaDistrictsCovidApi(BaseCovidApi):
                 location=region.get("loc"),
                 discharged=region.get("discharged"),
                 deaths=region.get("deaths"),
-                total_cases=region.get("totalConfirmed")
+                total_cases=region.get("totalConfirmed"),
             )
             covid_data_list.push(cd)
 

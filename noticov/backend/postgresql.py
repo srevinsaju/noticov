@@ -27,28 +27,32 @@ class PostgreSQLConnection(BaseConnection):
 
     def initialize(self):
         for table in Tables:
-            self.tables[table] = _table = \
-                Table(Tables.INDIA, self.meta,
-                      Column(CovidDataAttr.ID, String),
-                      Column(CovidDataAttr.LOCATION, String),
-                      Column(CovidDataAttr.TOTAL_CASES, Integer),
-                      Column(CovidDataAttr.DISCHARGED, Integer),
-                      Column(CovidDataAttr.DEATHS, Integer),
-                      Column(CovidDataAttr.TIMESTAMP, Integer),
-                      )
+            self.tables[table] = _table = Table(
+                Tables.INDIA,
+                self.meta,
+                Column(CovidDataAttr.ID, String),
+                Column(CovidDataAttr.LOCATION, String),
+                Column(CovidDataAttr.TOTAL_CASES, Integer),
+                Column(CovidDataAttr.DISCHARGED, Integer),
+                Column(CovidDataAttr.DEATHS, Integer),
+                Column(CovidDataAttr.TIMESTAMP, Integer),
+            )
 
             _table.create()
 
     def add_data(self, data: CovidData, table: Tables):
         self.conn.execute(
-            self.tables[table].insert().values(
-                ((CovidDataAttr.ID, uuid.uuid4()),
-                 (CovidDataAttr.TIMESTAMP, data.timestamp),
-                 (CovidDataAttr.DEATHS, data.deaths),
-                 (CovidDataAttr.TOTAL_CASES, data.total_cases),
-                 (CovidDataAttr.DISCHARGED, data.discharged),
-                 (CovidDataAttr.LOCATION, data.location),
-                 )
+            self.tables[table]
+            .insert()
+            .values(
+                (
+                    (CovidDataAttr.ID, uuid.uuid4()),
+                    (CovidDataAttr.TIMESTAMP, data.timestamp),
+                    (CovidDataAttr.DEATHS, data.deaths),
+                    (CovidDataAttr.TOTAL_CASES, data.total_cases),
+                    (CovidDataAttr.DISCHARGED, data.discharged),
+                    (CovidDataAttr.LOCATION, data.location),
+                )
             )
         )
         self.conn.commit()
@@ -62,7 +66,9 @@ class PostgreSQLConnection(BaseConnection):
         # TODO: looks sus.. pls fix someone 🥺🥺🥺
         where_expression = self.tables[table].c.loc == location
 
-        resultset = self.conn.execute(self.tables[table].select().where(where_expression))
+        resultset = self.conn.execute(
+            self.tables[table].select().where(where_expression)
+        )
         self.logger.debug(f"Received {len(resultset)} rows from {self.connection}")
         # TODO: fix this part, is messed up again
         return resultset
@@ -71,12 +77,13 @@ class PostgreSQLConnection(BaseConnection):
         # TODO: looks sus.. pls fix someone 🥺🥺🥺
         where_expression = self.tables[table].c.loc == location
 
-        resultset = self.conn.execute(self.tables[table]
-                                      .select()
-                                      .where(where_expression)
-                                      .order_by(CovidDataAttr.TIMESTAMP)
-                                      .limit(1)
-                                      )
+        resultset = self.conn.execute(
+            self.tables[table]
+            .select()
+            .where(where_expression)
+            .order_by(CovidDataAttr.TIMESTAMP)
+            .limit(1)
+        )
         self.logger.debug(f"Received {len(resultset)} rows from {self.connection}")
         # TODO: fix this part, is messed up again
         return resultset
