@@ -12,7 +12,8 @@ class IndiaDistrictsCovidApi(BaseCovidApi):
 
     def get_data(self) -> CovidDataList:
         _data = requests.get(self.canonical_url).json()
-        if not _data.get("success") == "true":
+
+        if not _data.get("success"):
             # the data was not successfully scraped
             raise ApiEndpointFailed
 

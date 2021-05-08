@@ -48,6 +48,8 @@ class CovidDataList:
     def count(self) -> int:
         return len(self._list)
 
+    def __iter__(self):
+        return iter(self._list)
 
 class CovidDataAttr(Enum):
     ID = "id"
