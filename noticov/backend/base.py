@@ -1,6 +1,6 @@
 from typing import List
 
-from noticov.backend.tables import Table
+from noticov.backend.tables import Tables
 from noticov.covidstats.data import CovidData
 
 
@@ -18,7 +18,7 @@ class BaseConnection:
         """
         raise NotImplementedError
 
-    def add_data(self, data: CovidData):
+    def add_data(self, data: CovidData, table: Tables):
         """
         Add a CovidData to the database..
         :param data:
@@ -28,7 +28,7 @@ class BaseConnection:
         """
         raise NotImplementedError
 
-    def add_multiple_data(self, data_sequence: List[CovidData]):
+    def add_multiple_data(self, data_sequence: List[CovidData], table: Tables):
         """
         Add a sequence of Covid19Data to the database
         :param data_sequence:
@@ -42,5 +42,5 @@ class BaseConnection:
     def get_connection_type(self):
         return self.connection
 
-    def get_all_covid_data(self, table: Table, location: str):
+    def get_all_covid_data(self, table: Tables, location: str):
         raise NotImplementedError
