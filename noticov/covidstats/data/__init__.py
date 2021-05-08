@@ -45,7 +45,6 @@ class CovidDataList:
         return len(self._list)
 
 
-
 class CovidDataAttr(Enum):
     ID = "id"
     LOCATION = "loc"
