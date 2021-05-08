@@ -9,6 +9,14 @@ class BaseConnection:
     def __init__(self):
         pass
 
+    def initialize(self):
+        """
+        Create the tables and databases here
+        :return:
+        :rtype:
+        """
+        raise NotImplementedError
+
     def add_data(self, data: CovidData):
         """
         Add a CovidData to the database..
