@@ -21,6 +21,8 @@ class BaseConnection:
     def add_data(self, data: CovidData, table: Tables):
         """
         Add a CovidData to the database..
+        :param table:
+        :type table:
         :param data:
         :type data:
         :return:
@@ -31,6 +33,8 @@ class BaseConnection:
     def add_multiple_data(self, data_sequence: List[CovidData], table: Tables):
         """
         Add a sequence of Covid19Data to the database
+        :param table:
+        :type table:
         :param data_sequence:
         :type data_sequence:
         :return:
