@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 class CovidData:
     def __init__(
             self,
@@ -42,3 +45,11 @@ class CovidDataList:
         return len(self._list)
 
 
+
+class CovidDataAttr(Enum):
+    ID = "id"
+    LOCATION = "loc"
+    TIMESTAMP = "ts"
+    TOTAL_CASES = "total_cases"
+    DEATHS = "deaths"
+    DISCHARGED = "discharged"
