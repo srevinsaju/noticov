@@ -7,7 +7,7 @@ from sqlalchemy.sql import FromClause
 
 from noticov.backend.base import BaseConnection
 from noticov.backend.tables import Tables
-from noticov.covidstats.data import CovidData, CovidDataAttr
+from noticov.covidstats.data import CovidData, CovidDataAttr, CovidDataList
 from noticov.logging import make_logger
 
 
@@ -57,7 +57,7 @@ class PostgreSQLConnection(BaseConnection):
         )
         self.conn.commit()
 
-    def add_multiple_data(self, data_sequence: List[CovidData], table: Tables):
+    def add_multiple_data(self, data_sequence: CovidDataList, table: Tables):
         # TODO: Improve the performance by doing only a single request
         for data in data_sequence:
             self.add_data(data, table)

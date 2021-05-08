@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 from noticov.backend.base import BaseConnection
 from noticov.backend.postgresql import PostgreSQLConnection
+from noticov.backend.tables import Tables
 from noticov.covidstats.india import IndiaDistrictsCovidApi
 from noticov.exceptions import DBStringNotFound
 
@@ -27,6 +28,8 @@ class NotiCovBackend:
         :rtype:
         """
         ind_covid_api = IndiaDistrictsCovidApi()
+        data_stream = ind_covid_api.get_data()
+        self.conn.add_multiple_data(data_stream, table=Tables.INDIA)
 
     def start(self):
         while True:
