@@ -3,7 +3,6 @@ from typing import List, Dict
 
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, String, MetaData, Integer
-from sqlalchemy.sql import FromClause
 
 from noticov.backend.base import BaseConnection
 from noticov.backend.tables import Tables
