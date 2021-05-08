@@ -1,3 +1,4 @@
+import time
 from enum import Enum
 
 
@@ -8,13 +9,16 @@ class CovidData:
             total_cases: int = None,
             deaths: int = None,
             discharged: int = None,
-
-
+            timestamp: int = None,
     ):
         self.location = location
         self.total_cases = total_cases
         self.deaths = deaths
         self.discharged = discharged
+        if timestamp is None:
+            self.timestamp = int(time.time())
+        else:
+            self.timestamp = timestamp
 
     @property
     def new_cases_today(self):
