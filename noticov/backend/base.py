@@ -1,5 +1,6 @@
 from typing import List
 
+from noticov.backend.tables import Table
 from noticov.covidstats.data import CovidData
 
 
@@ -41,3 +42,5 @@ class BaseConnection:
     def get_connection_type(self):
         return self.connection
 
+    def get_all_covid_data(self, table: Table, location: str):
+        raise NotImplementedError
