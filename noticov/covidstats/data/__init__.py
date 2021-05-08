@@ -51,6 +51,7 @@ class CovidDataList:
     def __iter__(self):
         return iter(self._list)
 
+
 class CovidDataAttr(Enum):
     ID = "id"
     LOCATION = "loc"
