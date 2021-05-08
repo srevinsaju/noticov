@@ -6,7 +6,7 @@ app = Flask("noticov")
 
 @app.route("/")
 def main():
-    pass
+    return "Hello World"
 
 
 if __name__ == "__main__":
