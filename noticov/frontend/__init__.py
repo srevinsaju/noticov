@@ -27,6 +27,16 @@ def states_latest():
     return jsonify({"success": True, "data": total_cases})
 
 
+@app.route("/api/in/resources/country")
+def states_latest():
+    data = IndiaResourcesDistrictsCovidApi().get_data()
+    total_sum = 0
+    for i in data:
+        total_sum += i.rural_beds + i.urban_beds
+    print(total_sum)
+    return jsonify({"success": True, "data": total_sum})
+
+
 @app.route("/api/in/latest/states")
 def states_latest():
     data = ncb.conn.get_all_latest_covid_cases(Tables.INDIA)
