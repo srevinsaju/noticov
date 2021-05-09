@@ -34,7 +34,7 @@ class PostgreSQLConnection(BaseConnection):
                 Column(CovidDataAttr.TOTAL_CASES.value, Integer),
                 Column(CovidDataAttr.DISCHARGED.value, Integer),
                 Column(CovidDataAttr.DEATHS.value, Integer),
-                Column(CovidDataAttr.TIMESTAMP.value, Integer)
+                Column(CovidDataAttr.TIMESTAMP.value, Integer),
             )
 
         self.meta.create_all()
@@ -44,14 +44,16 @@ class PostgreSQLConnection(BaseConnection):
             self.tables[table]
             .insert()
             .values(
-                **dict((
-                    (CovidDataAttr.ID.value, uuid.uuid4().hex),
-                    (CovidDataAttr.TIMESTAMP.value, data.timestamp),
-                    (CovidDataAttr.DEATHS.value, data.deaths),
-                    (CovidDataAttr.TOTAL_CASES.value, data.total_cases),
-                    (CovidDataAttr.DISCHARGED.value, data.discharged),
-                    (CovidDataAttr.LOCATION.value, data.location),
-                ))
+                **dict(
+                    (
+                        (CovidDataAttr.ID.value, uuid.uuid4().hex),
+                        (CovidDataAttr.TIMESTAMP.value, data.timestamp),
+                        (CovidDataAttr.DEATHS.value, data.deaths),
+                        (CovidDataAttr.TOTAL_CASES.value, data.total_cases),
+                        (CovidDataAttr.DISCHARGED.value, data.discharged),
+                        (CovidDataAttr.LOCATION.value, data.location),
+                    )
+                )
             )
         )
 
@@ -74,15 +76,19 @@ class PostgreSQLConnection(BaseConnection):
         cdl = CovidDataList()
         for record in values:
             cdl.push(
-                CovidData(location=record[1],
-                          total_cases=record[2],
-                          discharged=record[3],
-                          deaths=record[4],
-                          timestamp=record[5])
+                CovidData(
+                    location=record[1],
+                    total_cases=record[2],
+                    discharged=record[3],
+                    deaths=record[4],
+                    timestamp=record[5],
+                )
             )
         return cdl
 
-    def get_latest_covid_data(self, table: Tables, location: str) -> Optional[CovidData]:
+    def get_latest_covid_data(
+        self, table: Tables, location: str
+    ) -> Optional[CovidData]:
         # TODO: looks sus.. pls fix someone 🥺🥺🥺
         where_expression = self.tables[table].c.loc == location
 
@@ -99,11 +105,13 @@ class PostgreSQLConnection(BaseConnection):
             return None
         self.logger.debug(f"Received {len(values)} row from {self.connection}")
         record = values[0]
-        return CovidData(location=record[1],
-                         total_cases=record[2],
-                         discharged=record[3],
-                         deaths=record[4],
-                         timestamp=record[5])
+        return CovidData(
+            location=record[1],
+            total_cases=record[2],
+            discharged=record[3],
+            deaths=record[4],
+            timestamp=record[5],
+        )
 
     def reset_tables(self):
         for i in self.tables:

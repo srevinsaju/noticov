@@ -6,6 +6,7 @@ from noticov.logging import make_logger
 
 class CourierNotifier:
     logger = make_logger("courier")
+
     def __init__(self, token: str = None):
         if token is None:
             raise RuntimeError(
@@ -18,19 +19,17 @@ class CourierNotifier:
         resp = self.client.send(
             event="T5VSYRFG3FMQCZQN481A671QK86A",
             recipient="ae918498-110c-463a-bed2-f6d8529e4348",
-            profile={
-                'discord': {
-                    "channel_id": "760033237422309419"
-                }
-            },
+            profile={"discord": {"channel_id": "760033237422309419"}},
             data={
-                'current_cases': data.total_cases - old_data.total_cases,
-                'deaths': data.deaths,
-                'additional_info': "Stay safe, friend!"
+                "current_cases": data.total_cases - old_data.total_cases,
+                "deaths": data.deaths,
+                "additional_info": "Stay safe, friend!",
             },
         )
 
-        self.logger.info(f"Sending courier notification, with message id {resp.get('message_id')}")
+        self.logger.info(
+            f"Sending courier notification, with message id {resp.get('message_id')}"
+        )
 
     def notify_deaths_changed(self, data: CovidData):
         raise NotImplementedError

@@ -14,6 +14,7 @@ from noticov.logging import make_logger, setup_logging
 
 class NotiCovBackend:
     logger = make_logger("backend")
+
     def __init__(
         self,
         connection: BaseConnection = None,
@@ -42,7 +43,9 @@ class NotiCovBackend:
         while data_stream.count() > 0:
 
             data = data_stream.pop()
-            latest_stored_data = self.conn.get_latest_covid_data(table=Tables.INDIA, location=data.location)
+            latest_stored_data = self.conn.get_latest_covid_data(
+                table=Tables.INDIA, location=data.location
+            )
             if latest_stored_data is None:
                 continue
             if latest_stored_data.deaths < data.deaths:
@@ -55,7 +58,9 @@ class NotiCovBackend:
                 if self.notifier is not None:
                     self.notifier.notify(data, old_data=latest_stored_data)
 
-        self.logger.info(f"Adding new datastream of {data_stream_unchanged.count()} records to database")
+        self.logger.info(
+            f"Adding new datastream of {data_stream_unchanged.count()} records to database"
+        )
         self.conn.add_multiple_data(data_stream_unchanged, table=Tables.INDIA)
 
     def start(self):
