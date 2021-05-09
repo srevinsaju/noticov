@@ -16,7 +16,7 @@ default_arguments = {
     "app_name": "noticov",
 }
 
-/api/in/resources/states
+
 @app.route("/api/in/resources/states")
 def states_latest():
     data = IndiaResourcesDistrictsCovidApi().get_data()
