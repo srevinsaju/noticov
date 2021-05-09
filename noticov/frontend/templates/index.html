@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Home</title>
+    <title>Home - {{ app_name }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700">
     <!-- https://fonts.google.com/specimen/Roboto -->
     <link rel="stylesheet" href="/static/css/fontawesome.min.css">
@@ -24,7 +24,7 @@
         <nav class="navbar navbar-expand-xl">
             <div class="container h-100">
                 <a class="navbar-brand" href="index.html">
-                    <h1 class="tm-site-title mb-0">Home</h1>
+                    <h1 class="tm-site-title mb-0">Home | {{ app_name }}</h1>
                 </a>
                 <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -335,15 +335,15 @@
         </footer>
     </div>
 
-    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
     <!-- https://jquery.com/download/ -->
-    <script src="js/moment.min.js"></script>
+    <script src="/static/js/moment.min.js"></script>
     <!-- https://momentjs.com/ -->
-    <script src="js/Chart.min.js"></script>
+    <script src="/static/js/Chart.min.js"></script>
     <!-- http://www.chartjs.org/docs/latest/ -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
     <!-- https://getbootstrap.com/ -->
-    <script src="js/tooplate-scripts.js"></script>
+    <script src="/static/js/tooplate-scripts.js"></script>
     <script>
         Chart.defaults.global.defaultFontColor = 'white';
         let ctxLine,
