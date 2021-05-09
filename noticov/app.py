@@ -42,6 +42,8 @@ class NotiCovBackend:
 
             data = data_stream.pop()
             latest_stored_data = self.conn.get_latest_covid_data(table=Tables.INDIA, location=data.location)
+            if latest_stored_data is None:
+                continue
             if latest_stored_data.deaths < data.deaths:
                 if self.notifier is not None:
                     self.notifier.notify(data, old_data=latest_stored_data)

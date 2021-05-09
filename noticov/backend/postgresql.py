@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, String, MetaData, Integer
@@ -82,7 +82,7 @@ class PostgreSQLConnection(BaseConnection):
             )
         return cdl
 
-    def get_latest_covid_data(self, table: Tables, location: str) -> CovidData:
+    def get_latest_covid_data(self, table: Tables, location: str) -> Optional[CovidData]:
         # TODO: looks sus.. pls fix someone 🥺🥺🥺
         where_expression = self.tables[table].c.loc == location
 
@@ -94,7 +94,9 @@ class PostgreSQLConnection(BaseConnection):
             .limit(1)
         )
         values = resultset.fetchall()
-        assert len(values) == 1
+        assert len(values) <= 1
+        if len(values) == 0:
+            return None
         self.logger.debug(f"Received {len(values)} row from {self.connection}")
         record = values[0]
         return CovidData(location=record[1],
