@@ -91,6 +91,7 @@ function timeDifference(current, previous) {
     var msPerYear = msPerDay * 365;
 
     var elapsed = current - previous;
+    console.log(current, previous, msPerMinute, elapsed)
 
     if (elapsed < msPerMinute) {
           console.log(elapsed)
@@ -144,14 +145,10 @@ function drawLineChart() {
       let total_cases = [];
       let discharged = [];
       let deaths = [];
-      let today = new Date();
       data.data.forEach(function(x) {
-        let d = new Date(0); // The 0 there is the key, which sets the date to the epoch
 
-        d.setUTCSeconds(x["timestamp"]);
-        console.log(d.toUTCString(), x["deaths"], x["total_cases"], x["discharged"])
-
-        x_axis.push(timeDifference(today.getMilliseconds(), d.getMilliseconds()));
+        console.log(x["deaths"], x["total_cases"], x["discharged"])
+        x_axis.push(timeDifference(Date.now(), x["timestamp"] * 1000));
 
         deaths.push(x["deaths"]);
         total_cases.push(x["total_cases"]);
