@@ -14,3 +14,9 @@ class CourierNotifier:
 
     def notify(self, data: CovidData):
         raise NotImplementedError
+
+    def notify_deaths_changed(self, data: CovidData):
+        raise NotImplementedError
+
+    def notify_total_cases_changed(self, data: CovidData):
+        raise NotImplementedError

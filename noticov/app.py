@@ -29,6 +29,18 @@ class NotiCovBackend:
         """
         ind_covid_api = IndiaDistrictsCovidApi()
         data_stream = ind_covid_api.get_data()
+
+        while data_stream.count() > 0:
+
+            data = data_stream.pop()
+            latest_stored_data = self.conn.get_latest_covid_data(table=Tables.INDIA, location=data.location)
+            if latest_stored_data.deaths < data.deaths:
+                pass
+            elif latest_stored_data.total_cases < data.total_cases:
+                pass
+            elif latest_stored_data.discharged < data.discharged:
+                pass
+
         self.conn.add_multiple_data(data_stream, table=Tables.INDIA)
 
     def start(self):
