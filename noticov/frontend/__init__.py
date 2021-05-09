@@ -17,7 +17,6 @@ default_arguments = {
 }
 
 
-
 @app.route("/api/in/resources/states")
 def states_latest():
 
@@ -74,10 +73,8 @@ def available_states():
 def main():
     data = ncb.conn.get_latest_covid_data(Tables.INDIA, Countries.INDIA.value)
     return render_template(
-        "index.html",
-        coviddata=data,
-        hospital_beds=0,
-        **default_arguments)
+        "index.html", coviddata=data, hospital_beds=0, **default_arguments
+    )
 
 
 if __name__ == "__main__":

@@ -3,13 +3,13 @@ import time
 
 class MedicalBedsAvailable:
     def __init__(
-            self,
-            location: str = None,
-            rural_hospitals: int = None,
-            rural_beds: int = None,
-            urban_hospitals: int = None,
-            urban_beds: int = None,
-            timestamp: int = None,
+        self,
+        location: str = None,
+        rural_hospitals: int = None,
+        rural_beds: int = None,
+        urban_hospitals: int = None,
+        urban_beds: int = None,
+        timestamp: int = None,
     ):
         self.location = location
         self.rural_hospitals = rural_hospitals
@@ -37,7 +37,7 @@ class MedicalBedsAvailable:
             "rural_hospitals": self.rural_hospitals,
             "rural_beds": self.rural_beds,
             "urban_hospitals": self.urban_hospitals,
-            "urban_beds": self.urban_beds
+            "urban_beds": self.urban_beds,
         }
 
 
