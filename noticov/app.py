@@ -49,7 +49,7 @@ class NotiCovBackend:
             )
             if latest_stored_data is None:
                 self.notifier.notify(data, old_data=CovidData())
-            if latest_stored_data.deaths < data.deaths:
+            elif latest_stored_data.deaths < data.deaths:
                 if self.notifier is not None:
                     self.notifier.notify(data, old_data=latest_stored_data)
             elif latest_stored_data.total_cases < data.total_cases:

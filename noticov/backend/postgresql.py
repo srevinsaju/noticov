@@ -87,7 +87,7 @@ class PostgreSQLConnection(BaseConnection):
         where_expression = self.tables[table].c.loc == location
 
         resultset = self.conn.execute(
-            self.tables[table].select().where(where_expression)
+            self.tables[table].select().where(where_expression).limit(30)
         )
 
         cdl = self._parse_psql_result_set(resultset)

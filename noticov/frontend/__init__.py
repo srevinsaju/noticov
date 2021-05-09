@@ -15,6 +15,15 @@ default_arguments = {
 }
 
 
+@app.route("/api/in/summary")
+def top_covid_cases():
+    data = ncb.conn.get_top_covid_cases(Tables.INDIA)
+    total_cases = []
+    for i in data:
+        total_cases.append({"location": i.location, "total_cases": i.total_cases})
+    return jsonify({"success": True, "data": total_cases})
+
+
 @app.route("/api/in/top_covid_cases")
 def top_covid_cases():
     data = ncb.conn.get_top_covid_cases(Tables.INDIA)

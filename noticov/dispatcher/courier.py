@@ -16,14 +16,17 @@ class CourierNotifier:
         self.client = Courier(auth_token=token)
 
     def notify(self, data: CovidData, old_data: CovidData):
+        current_cases = data.total_cases
+        if data.total_cases is not None and old_data.total_cases is not None:
+            current_cases = data.total_cases - old_data.total_cases
         resp = self.client.send(
             event="T5VSYRFG3FMQCZQN481A671QK86A",
             recipient="ae918498-110c-463a-bed2-f6d8529e4348",
             profile={"discord": {"channel_id": "760033237422309419"}},
             data={
-                "current_cases": data.total_cases - old_data.total_cases,
-                "deaths": data.deaths,
-                "additional_info": "Stay safe, friend!",
+                "current_cases": str(current_cases),
+                "deaths": str(data.deaths),
+                "additional_message": "Stay safe, friend!",
             },
         )
 

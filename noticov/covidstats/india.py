@@ -32,4 +32,11 @@ class IndiaDistrictsCovidApi(BaseCovidApi):
             )
             covid_data_list.push(cd)
 
+        cd = CovidData(
+            location="India",
+            discharged=_data.get("discharged"),
+            deaths=_data.get("deaths"),
+            total_cases=_data.get("total")
+        )
+        covid_data_list.push(cd)
         return covid_data_list
