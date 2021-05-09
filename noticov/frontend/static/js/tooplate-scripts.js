@@ -46,14 +46,14 @@ const runAnimations = () => {
 
 	  data.data.forEach(function (cd) {
 	    let status_condition = ""
-        if (data["total_cases"] > data["discharged"]) {
+        if (cd["total_cases"] > cd["discharged"]) {
           status_condition = "worse"
         } else {
           status_condition = "getting better"
         }
         let d = new Date(0);
         let today = new Date();
-        d.setUTCSeconds(data["timestamp"]);
+        d.setUTCSeconds(cd["timestamp"]);
 
         $("#current_status").append(
               `
@@ -63,11 +63,11 @@ const runAnimations = () => {
                     <div class="tm-status-circle moving">
                     </div>${status_condition}
                 </td>
-                <td><b>${data["location"]}</b></td>
+                <td><b>${cd["location"]}</b></td>
                 
-                <td><b>${data["total_cases"]}/b></td>
-                <td>${data["deaths"]}</td>
-                <td>${data["discharged"]}</td>
+                <td><b>${cd["total_cases"]}/b></td>
+                <td>${cd["deaths"]}</td>
+                <td>${cd["discharged"]}</td>
                 <td>${timeDifference(today.getMilliseconds(), d.getMilliseconds())}</td>
             </tr>
               `

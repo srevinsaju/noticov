@@ -3,6 +3,7 @@ from typing import Dict, Optional, List
 
 from sqlalchemy import create_engine
 from sqlalchemy import desc
+from sqlalchemy.sql.expression import func
 from sqlalchemy import Table, Column, String, MetaData, Integer
 
 from noticov.backend.base import BaseConnection
@@ -107,15 +108,15 @@ class PostgreSQLConnection(BaseConnection):
         return cdl
 
     def get_all_latest_covid_cases(self, table: Tables) -> CovidDataList:
+        raise NotImplementedError
+
         resultset = self.conn.execute(
             self.tables[table]
                 .select()
                 .where(self.tables[table].c.loc != "India")
                 .distinct(self.tables[table].c.loc)
+                .group_by(CovidDataAttr.LOCATION.value)
                 .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
-                .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
-                .order_by(desc(CovidDataAttr.TIMESTAMP.value))
-
         )
 
         cdl = self._parse_psql_result_set(resultset)
