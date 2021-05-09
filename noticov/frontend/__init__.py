@@ -20,30 +20,19 @@ def top_covid_cases():
     data = ncb.conn.get_top_covid_cases(Tables.INDIA)
     total_cases = []
     for i in data:
-        total_cases.append({
-            "location": i.location,
-            "total_cases": i.total_cases
-        })
-    return jsonify({
-        "success": True,
-        "data": total_cases
-    })
+        total_cases.append({"location": i.location, "total_cases": i.total_cases})
+    return jsonify({"success": True, "data": total_cases})
+
 
 @app.route("/api/in/states")
 def available_states():
     data = ncb.conn.get_available_states_countries(Tables.INDIA)
-    return jsonify({
-        "success": True,
-        "data": data
-    })
+    return jsonify({"success": True, "data": data})
 
 
 @app.route("/")
 def main():
-    return render_template(
-        "index.html",
-        **default_arguments
-    )
+    return render_template("index.html", **default_arguments)
 
 
 if __name__ == "__main__":

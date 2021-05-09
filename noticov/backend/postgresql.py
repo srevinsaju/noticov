@@ -95,10 +95,11 @@ class PostgreSQLConnection(BaseConnection):
 
     def get_top_covid_cases(self, table: Tables) -> CovidDataList:
         resultset = self.conn.execute(
-            self.tables[table].select()
-                .order_by(desc(CovidDataAttr.TIMESTAMP.value))
-                .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
-                .limit(7)
+            self.tables[table]
+            .select()
+            .order_by(desc(CovidDataAttr.TIMESTAMP.value))
+            .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
+            .limit(7)
         )
 
         cdl = self._parse_psql_result_set(resultset)
@@ -106,9 +107,10 @@ class PostgreSQLConnection(BaseConnection):
 
     def get_available_states_countries(self, table: Tables) -> List[str]:
         resultset = self.conn.execute(
-            self.tables[table].select()
-                .distinct(self.tables[table].c.loc)
-                .order_by(CovidDataAttr.LOCATION.value)
+            self.tables[table]
+            .select()
+            .distinct(self.tables[table].c.loc)
+            .order_by(CovidDataAttr.LOCATION.value)
         )
 
         return [record[1] for record in resultset.fetchall()]

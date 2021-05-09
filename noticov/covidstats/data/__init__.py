@@ -31,7 +31,11 @@ class CovidData:
 
     def __repr__(self):
         return "CovidData(location={}, tc={}, dc={}, deaths={}, timestamp={})".format(
-            self.location, self.total_cases, self.discharged, self.deaths, self.timestamp
+            self.location,
+            self.total_cases,
+            self.discharged,
+            self.deaths,
+            self.timestamp,
         )
 
 
