@@ -31,6 +31,15 @@ class MedicalBedsAvailable:
             self.timestamp,
         )
 
+    def to_dict(self):
+        return {
+            "location": self.location,
+            "rural_hospitals": self.rural_hospitals,
+            "rural_beds": self.rural_beds,
+            "urban_hospitals": self.urban_hospitals,
+            "urban_beds": self.urban_beds
+        }
+
 
 class MedicalBedsAvailableList:
     def __init__(self):
