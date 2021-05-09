@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from noticov.backend.base import BaseConnection
 from noticov.backend.postgresql import PostgreSQLConnection
 from noticov.backend.tables import Tables
+from noticov.covidstats.data import CovidData
 from noticov.covidstats.india import IndiaDistrictsCovidApi
 from noticov.dispatcher.courier import CourierNotifier
 from noticov.exceptions import DBStringNotFound
@@ -47,7 +48,7 @@ class NotiCovBackend:
                 table=Tables.INDIA, location=data.location
             )
             if latest_stored_data is None:
-                continue
+                self.notifier.notify(data, old_data=CovidData())
             if latest_stored_data.deaths < data.deaths:
                 if self.notifier is not None:
                     self.notifier.notify(data, old_data=latest_stored_data)

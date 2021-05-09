@@ -64,6 +64,16 @@ class BaseConnection:
         """
         raise NotImplementedError
 
+    def get_top_covid_cases(self, table: Tables) -> CovidDataList:
+        """
+        Returns the top 7 covid cases in the state wise if available
+        :param table:
+        :type table:
+        :return:
+        :rtype:
+        """
+        raise NotImplementedError
+
     def get_latest_covid_data(self, table: Tables, location: str) -> CovidData:
         """
         Gets the last saved covid data

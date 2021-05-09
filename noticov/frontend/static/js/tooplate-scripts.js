@@ -101,32 +101,47 @@ function drawBarChart() {
      * Orange: #DB9C3F
      * Blue: #3889FC
      */
+    $.getJSON( "/api/in/top_covid_cases", function( data ) {
 
-    configBar = {
-      type: "horizontalBar",
-      data: {
-        labels: ["Red", "Aqua", "Green", "Yellow", "Purple", "Orange", "Blue"],
-        datasets: [
-          {
-            label: "# of Hits",
-            data: [33, 40, 28, 49, 58, 38, 44],
-            backgroundColor: [
-              "#F7604D",
-              "#4ED6B8",
-              "#A8D582",
-              "#D7D768",
-              "#9D66CC",
-              "#DB9C3F",
-              "#3889FC"
-            ],
-            borderWidth: 0
+      console.log(data);
+
+      let x_axis = [];
+      let y_axis = [];
+      data.data.forEach(function (covidData) {
+            x_axis.push(covidData["location"])
+            y_axis.push(covidData["total_cases"])
           }
-        ]
-      },
-      options: optionsBar
-    };
+      )
 
-    barChart = new Chart(ctxBar, configBar);
+      configBar = {
+        type: "horizontalBar",
+        data: {
+          labels: x_axis,
+          datasets: [
+            {
+              label: "# of Hits",
+              data: y_axis,
+              backgroundColor: [
+                "#F7604D",
+                "#4ED6B8",
+                "#A8D582",
+                "#D7D768",
+                "#9D66CC",
+                "#DB9C3F",
+                "#3889FC"
+              ],
+              borderWidth: 0
+            }
+          ]
+        },
+        options: optionsBar
+      };
+
+      barChart = new Chart(ctxBar, configBar);
+    });
+
+
+
   }
 }
 
