@@ -53,6 +53,11 @@ class CovidDataList:
     def __iter__(self):
         return iter(self._list)
 
+    def copy(self):
+        cdl = CovidDataList()
+        cdl._list = self._list.copy()
+        return cdl
+
 
 class CovidDataAttr(Enum):
     ID = "id"

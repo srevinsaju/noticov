@@ -9,7 +9,7 @@ from noticov.backend.tables import Tables
 from noticov.covidstats.india import IndiaDistrictsCovidApi
 from noticov.dispatcher.courier import CourierNotifier
 from noticov.exceptions import DBStringNotFound
-from noticov.logging import make_logger
+from noticov.logging import make_logger, setup_logging
 
 
 class NotiCovBackend:
@@ -36,7 +36,8 @@ class NotiCovBackend:
         :rtype:
         """
         ind_covid_api = IndiaDistrictsCovidApi()
-        data_stream = ind_covid_api.get_data()
+        data_stream_unchanged = ind_covid_api.get_data()
+        data_stream = data_stream_unchanged.copy()
 
         while data_stream.count() > 0:
 
@@ -54,7 +55,8 @@ class NotiCovBackend:
                 if self.notifier is not None:
                     self.notifier.notify(data, old_data=latest_stored_data)
 
-        self.conn.add_multiple_data(data_stream, table=Tables.INDIA)
+        self.logger.info(f"Adding new datastream of {data_stream_unchanged.count()} records to database")
+        self.conn.add_multiple_data(data_stream_unchanged, table=Tables.INDIA)
 
     def start(self):
         while True:
@@ -66,8 +68,11 @@ class NotiCovBackend:
 
 
 def main():
+    logger = make_logger("main")
     load_dotenv()
+    setup_logging()
 
+    logger.debug("Reading DB_STRING for database access")
     db_string = os.getenv("DB_STRING")
     if not db_string:
         raise DBStringNotFound(
@@ -76,12 +81,18 @@ def main():
         )
 
     try:
-        sleep_time = int(os.getenv("SLEEP_TIME") or 60 * 60)
+        sleep_time = int(os.getenv("SLEEP_TIME") or 60 * 30)
     except ValueError:
         raise RuntimeError("$SLEEP_TIME is not valid integer")
+    logger.info(f"Setting intervals of refresh to be {sleep_time}")
 
     # initialize the psql connection
+    logger.info("Initializing PostgreSQL connection")
     psql = PostgreSQLConnection(destination=db_string)
 
-    ncb = NotiCovBackend(connection=psql, sleep=sleep_time)
+    # initialize the courier connection
+    logger.info("Initializing Courier connection")
+    notifier = CourierNotifier(token=os.getenv("COURIER_AUTH_TOKEN"))
+
+    ncb = NotiCovBackend(connection=psql, sleep=sleep_time, notifier=notifier)
     ncb.start()
