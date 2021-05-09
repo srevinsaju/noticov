@@ -1,5 +1,123 @@
 const width_threshold = 480;
 
+// How long you want the animation to take, in ms
+const animationDuration = 2000;
+// Calculate how long each ‘frame’ should last if we want to update the animation 60 times per second
+const frameDuration = 1000 / 60;
+// Use that to calculate how many frames we need to complete the animation
+const totalFrames = Math.round( animationDuration / frameDuration );
+// An ease-out function that slows the count as it progresses
+const easeOutQuad = t => t * ( 2 - t );
+
+
+// The animation function, which takes an Element
+const animateCountUp = el => {
+	let frame = 0;
+	const countTo = parseInt( el.innerHTML, 10 );
+	// Start the animation running 60 times per second
+	const counter = setInterval( () => {
+		frame++;
+		// Calculate our progress as a value between 0 and 1
+		// Pass that value to our easing function to get our
+		// progress on a curve
+		const progress = easeOutQuad( frame / totalFrames );
+		// Use the progress value to calculate the current count
+		const currentCount = Math.round( countTo * progress );
+
+		// If the current count has changed, update the element
+		if ( parseInt( el.innerHTML, 10 ) !== currentCount ) {
+			el.innerHTML = currentCount;
+		}
+
+		// If we’ve reached our last frame, stop the animation
+		if ( frame === totalFrames ) {
+			clearInterval( counter );
+		}
+	}, frameDuration );
+};
+
+// Run the animation on all elements with a class of ‘countup’
+const runAnimations = () => {
+	const countupEls = document.querySelectorAll( '.countup' );
+	countupEls.forEach( animateCountUp );
+
+	$.getJSON("/api/in/latest/states", function (data) {
+	  let i = 0
+
+	  data.data.forEach(function (cd) {
+	    let status_condition = ""
+        if (data["total_cases"] > data["discharged"]) {
+          status_condition = "worse"
+        } else {
+          status_condition = "getting better"
+        }
+        let d = new Date(0);
+        let today = new Date();
+        d.setUTCSeconds(data["timestamp"]);
+
+        $("#current_status").append(
+              `
+            <tr>
+                <th scope="row"><b>#${i}</b></th>
+                <td>
+                    <div class="tm-status-circle moving">
+                    </div>${status_condition}
+                </td>
+                <td><b>${data["location"]}</b></td>
+                
+                <td><b>${data["total_cases"]}/b></td>
+                <td>${data["deaths"]}</td>
+                <td>${data["discharged"]}</td>
+                <td>${timeDifference(today.getMilliseconds(), d.getMilliseconds())}</td>
+            </tr>
+              `
+          )
+        i++;
+        })
+      })
+
+};
+
+
+
+// relative time convertor
+
+function timeDifference(current, previous) {
+
+    var msPerMinute = 60 * 1000;
+    var msPerHour = msPerMinute * 60;
+    var msPerDay = msPerHour * 24;
+    var msPerMonth = msPerDay * 30;
+    var msPerYear = msPerDay * 365;
+
+    var elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+          console.log(elapsed)
+         return Math.round(elapsed/1000) + ' seconds ago';
+    }
+
+    else if (elapsed < msPerHour) {
+         return Math.round(elapsed/msPerMinute) + ' minutes ago';
+    }
+
+    else if (elapsed < msPerDay ) {
+         return Math.round(elapsed/msPerHour ) + ' hours ago';
+    }
+
+    else if (elapsed < msPerMonth) {
+        return 'approximately ' + Math.round(elapsed/msPerDay) + ' days ago';
+    }
+
+    else if (elapsed < msPerYear) {
+        return 'approximately ' + Math.round(elapsed/msPerMonth) + ' months ago';
+    }
+
+    else {
+        return 'approximately ' + Math.round(elapsed/msPerYear ) + ' years ago';
+    }
+}
+
 function drawLineChart() {
   if ($("#lineChart").length) {
     ctxLine = document.getElementById("lineChart").getContext("2d");
@@ -26,11 +144,14 @@ function drawLineChart() {
       let total_cases = [];
       let discharged = [];
       let deaths = [];
+      let today = new Date();
       data.data.forEach(function(x) {
         let d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+
         d.setUTCSeconds(x["timestamp"]);
         console.log(d.toUTCString(), x["deaths"], x["total_cases"], x["discharged"])
-        x_axis.push(d.toUTCString());
+
+        x_axis.push(timeDifference(today.getMilliseconds(), d.getMilliseconds()));
 
         deaths.push(x["deaths"]);
         total_cases.push(x["total_cases"]);

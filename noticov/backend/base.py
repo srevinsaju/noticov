@@ -88,3 +88,13 @@ class BaseConnection:
         :rtype:
         """
         raise NotImplementedError
+
+    def get_all_latest_covid_cases(self, table: Tables) -> CovidDataList:
+        """
+
+        :param table:
+        :type table:
+        :return:
+        :rtype:
+        """
+        raise NotImplementedError

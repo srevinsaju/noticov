@@ -97,9 +97,25 @@ class PostgreSQLConnection(BaseConnection):
         resultset = self.conn.execute(
             self.tables[table]
             .select()
+            .where(self.tables[table].c.loc != "India")
             .order_by(desc(CovidDataAttr.TIMESTAMP.value))
             .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
             .limit(7)
+        )
+
+        cdl = self._parse_psql_result_set(resultset)
+        return cdl
+
+    def get_all_latest_covid_cases(self, table: Tables) -> CovidDataList:
+        resultset = self.conn.execute(
+            self.tables[table]
+                .select()
+                .where(self.tables[table].c.loc != "India")
+                .distinct(self.tables[table].c.loc)
+                .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
+                .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
+                .order_by(desc(CovidDataAttr.TIMESTAMP.value))
+
         )
 
         cdl = self._parse_psql_result_set(resultset)

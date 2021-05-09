@@ -16,6 +16,16 @@ default_arguments = {
 }
 
 
+@app.route("/api/in/latest/states")
+def states_latest():
+    data = ncb.conn.get_all_latest_covid_cases(Tables.INDIA)
+    total_cases = []
+    for i in data:
+        total_cases.append(i.to_dict())
+    print(total_cases)
+    return jsonify({"success": True, "data": total_cases})
+
+
 @app.route("/api/in/summary")
 def country_summary():
     data = ncb.conn.get_all_covid_data(Tables.INDIA, location=Countries.INDIA.value)
@@ -49,7 +59,12 @@ def available_states():
 
 @app.route("/")
 def main():
-    return render_template("index.html", **default_arguments)
+    data = ncb.conn.get_latest_covid_data(Tables.INDIA, Countries.INDIA.value)
+    return render_template(
+        "index.html",
+        coviddata=data,
+        hospital_beds=0,
+        **default_arguments)
 
 
 if __name__ == "__main__":
