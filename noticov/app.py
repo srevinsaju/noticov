@@ -7,17 +7,25 @@ from noticov.backend.base import BaseConnection
 from noticov.backend.postgresql import PostgreSQLConnection
 from noticov.backend.tables import Tables
 from noticov.covidstats.india import IndiaDistrictsCovidApi
+from noticov.dispatcher.courier import CourierNotifier
 from noticov.exceptions import DBStringNotFound
+from noticov.logging import make_logger
 
 
 class NotiCovBackend:
+    logger = make_logger("backend")
     def __init__(
         self,
         connection: BaseConnection = None,
+        notifier: CourierNotifier = None,
         sleep: int = 60 * 30,
     ):
         self.sleep = sleep
         self.conn = connection
+        self.notifier = notifier
+        if notifier is None:
+            self.logger.warning("No notifier passed. Notifications will be disabled.")
+
         if connection is None:
             raise ConnectionError("BaseConnection failed to initialize..")
 
@@ -35,11 +43,14 @@ class NotiCovBackend:
             data = data_stream.pop()
             latest_stored_data = self.conn.get_latest_covid_data(table=Tables.INDIA, location=data.location)
             if latest_stored_data.deaths < data.deaths:
-                pass
+                if self.notifier is not None:
+                    self.notifier.notify(data, old_data=latest_stored_data)
             elif latest_stored_data.total_cases < data.total_cases:
-                pass
+                if self.notifier is not None:
+                    self.notifier.notify(data, old_data=latest_stored_data)
             elif latest_stored_data.discharged < data.discharged:
-                pass
+                if self.notifier is not None:
+                    self.notifier.notify(data, old_data=latest_stored_data)
 
         self.conn.add_multiple_data(data_stream, table=Tables.INDIA)
 
