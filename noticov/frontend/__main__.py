@@ -1,3 +1,3 @@
 from noticov.frontend import app
 
-app.run()
+app.run(port=15555)
