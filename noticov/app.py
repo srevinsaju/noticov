@@ -48,7 +48,22 @@ class NotiCovBackend:
                 table=Tables.INDIA, location=data.location
             )
             if latest_stored_data is None:
-                self.notifier.notify(data, old_data=CovidData())
+                if self.notifier is not None:
+                    self.notifier.notify(data, old_data=CovidData())
+            elif (
+                data.deaths is None
+                or data.total_cases is None
+                or data.discharged is None
+            ):
+                if self.notifier is not None:
+                    self.notifier.notify(data, old_data=latest_stored_data)
+            elif (
+                latest_stored_data.deaths is None
+                or latest_stored_data.total_cases is None
+                or latest_stored_data.discharged is None
+            ):
+                if self.notifier is not None:
+                    self.notifier.notify(data, old_data=latest_stored_data)
             elif latest_stored_data.deaths < data.deaths:
                 if self.notifier is not None:
                     self.notifier.notify(data, old_data=latest_stored_data)

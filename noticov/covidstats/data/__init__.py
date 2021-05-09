@@ -1,6 +1,6 @@
 import time
 from enum import Enum
-from typing import Dict, Optional
+from typing import Dict, Optional, Union
 
 
 class CovidData:
@@ -21,7 +21,7 @@ class CovidData:
         else:
             self.timestamp = timestamp
 
-    def to_dict(self) -> Dict[str, Optional[int, str]]:
+    def to_dict(self) -> Dict[str, Union[int, str]]:
         return {
             "timestamp": self.timestamp,
             "location": self.location,

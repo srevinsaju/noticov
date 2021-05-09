@@ -20,39 +20,49 @@ function drawLineChart() {
     optionsLine.maintainAspectRatio =
       $(window).width() < width_threshold ? false : true;
 
-    $.getJSON( "/api/in/", function( data ) {
+    $.getJSON( "/api/in/summary", function( data ) {
+
+      let x_axis = [];
+      let total_cases = [];
+      let discharged = [];
+      let deaths = [];
+      data.data.forEach(function(x) {
+        let d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+        d.setUTCSeconds(x["timestamp"]);
+        console.log(d.toUTCString(), x["deaths"], x["total_cases"], x["discharged"])
+        x_axis.push(d.toUTCString());
+
+        deaths.push(x["deaths"]);
+        total_cases.push(x["total_cases"]);
+        discharged.push(x["discharged"]);
+      })
+
+
+
       configLine = {
         type: "line",
         data: {
-          labels: [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July"
-          ],
+          labels: x_axis,
           datasets: [
             {
-              label: "Latest Hits",
-              data: [88, 68, 79, 57, 50, 55, 70],
+              label: "Total Cases",
+              data: total_cases,
               fill: false,
               borderColor: "rgb(75, 192, 192)",
               cubicInterpolationMode: "monotone",
               pointRadius: 0
             },
             {
-              label: "Popular Hits",
-              data: [33, 45, 37, 21, 55, 74, 69],
+              label: "Deaths",
+              data: deaths,
               fill: false,
               borderColor: "rgba(255,99,132,1)",
               cubicInterpolationMode: "monotone",
               pointRadius: 0
             },
             {
-              label: "Featured",
-              data: [44, 19, 38, 46, 85, 66, 79],
+              label: "Discharged",
+              data: discharged,
               fill: false,
               borderColor: "rgba(153, 102, 255, 1)",
               cubicInterpolationMode: "monotone",

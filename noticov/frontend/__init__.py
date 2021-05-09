@@ -4,6 +4,7 @@ from noticov.app import initialize
 from flask import Flask, render_template, jsonify
 
 from noticov.backend.tables import Tables
+from noticov.covidstats.countries import Countries
 
 static_folder = os.path.join(os.path.dirname(__file__), "static")
 template_folder = os.path.join(os.path.dirname(__file__), "templates")
@@ -16,11 +17,12 @@ default_arguments = {
 
 
 @app.route("/api/in/summary")
-def top_covid_cases():
-    data = ncb.conn.get_top_covid_cases(Tables.INDIA)
+def country_summary():
+    data = ncb.conn.get_all_covid_data(Tables.INDIA, location=Countries.INDIA.value)
     total_cases = []
     for i in data:
-        total_cases.append({"location": i.location, "total_cases": i.total_cases})
+        total_cases.append(i.to_dict())
+    print(total_cases)
     return jsonify({"success": True, "data": total_cases})
 
 

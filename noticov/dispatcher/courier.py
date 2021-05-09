@@ -27,6 +27,7 @@ class CourierNotifier:
                 "current_cases": str(current_cases),
                 "deaths": str(data.deaths),
                 "additional_message": "Stay safe, friend!",
+                "location": str(data.location),
             },
         )
 
