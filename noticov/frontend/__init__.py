@@ -19,8 +19,7 @@ default_arguments = {
 
 @app.route("/api/in/resources/states")
 def states_latest():
-
-    data = IndiaResourcesDistrictsCovidApi()
+    data = IndiaResourcesDistrictsCovidApi().get_data()
     total_cases = []
     for i in data:
         total_cases.append(i.to_dict())
