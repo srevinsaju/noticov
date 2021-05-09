@@ -27,52 +27,62 @@ class PostgreSQLConnection(BaseConnection):
     def initialize(self):
         for table in Tables:
             self.tables[table] = _table = Table(
-                Tables.INDIA,
+                table.value,
                 self.meta,
-                Column(CovidDataAttr.ID, String),
-                Column(CovidDataAttr.LOCATION, String),
-                Column(CovidDataAttr.TOTAL_CASES, Integer),
-                Column(CovidDataAttr.DISCHARGED, Integer),
-                Column(CovidDataAttr.DEATHS, Integer),
-                Column(CovidDataAttr.TIMESTAMP, Integer),
+                Column(CovidDataAttr.ID.value, String),
+                Column(CovidDataAttr.LOCATION.value, String),
+                Column(CovidDataAttr.TOTAL_CASES.value, Integer),
+                Column(CovidDataAttr.DISCHARGED.value, Integer),
+                Column(CovidDataAttr.DEATHS.value, Integer),
+                Column(CovidDataAttr.TIMESTAMP.value, Integer)
             )
 
-            _table.create()
+        self.meta.create_all()
 
     def add_data(self, data: CovidData, table: Tables):
         self.conn.execute(
             self.tables[table]
             .insert()
             .values(
-                (
-                    (CovidDataAttr.ID, uuid.uuid4()),
-                    (CovidDataAttr.TIMESTAMP, data.timestamp),
-                    (CovidDataAttr.DEATHS, data.deaths),
-                    (CovidDataAttr.TOTAL_CASES, data.total_cases),
-                    (CovidDataAttr.DISCHARGED, data.discharged),
-                    (CovidDataAttr.LOCATION, data.location),
-                )
+                **dict((
+                    (CovidDataAttr.ID.value, uuid.uuid4().hex),
+                    (CovidDataAttr.TIMESTAMP.value, data.timestamp),
+                    (CovidDataAttr.DEATHS.value, data.deaths),
+                    (CovidDataAttr.TOTAL_CASES.value, data.total_cases),
+                    (CovidDataAttr.DISCHARGED.value, data.discharged),
+                    (CovidDataAttr.LOCATION.value, data.location),
+                ))
             )
         )
-        self.conn.commit()
 
     def add_multiple_data(self, data_sequence: CovidDataList, table: Tables):
         # TODO: Improve the performance by doing only a single request
         for data in data_sequence:
             self.add_data(data, table)
 
-    def get_all_covid_data(self, table: Tables, location: str):
+    def get_all_covid_data(self, table: Tables, location: str) -> CovidDataList:
         # TODO: looks sus.. pls fix someone 🥺🥺🥺
         where_expression = self.tables[table].c.loc == location
 
         resultset = self.conn.execute(
             self.tables[table].select().where(where_expression)
         )
-        self.logger.debug(f"Received {len(resultset)} rows from {self.connection}")
-        # TODO: fix this part, is messed up again
-        return resultset
 
-    def get_latest_covid_data(self, table: Tables, location: str):
+        values = resultset.fetchall()
+        assert len(values) == 1
+        self.logger.debug(f"Received {len(values)} row from {self.connection}")
+        cdl = CovidDataList()
+        for record in values:
+            cdl.push(
+                CovidData(location=record[1],
+                          total_cases=record[2],
+                          discharged=record[3],
+                          deaths=record[4],
+                          timestamp=record[5])
+            )
+        return cdl
+
+    def get_latest_covid_data(self, table: Tables, location: str) -> CovidData:
         # TODO: looks sus.. pls fix someone 🥺🥺🥺
         where_expression = self.tables[table].c.loc == location
 
@@ -80,9 +90,21 @@ class PostgreSQLConnection(BaseConnection):
             self.tables[table]
             .select()
             .where(where_expression)
-            .order_by(CovidDataAttr.TIMESTAMP)
+            .order_by(CovidDataAttr.TIMESTAMP.value)
             .limit(1)
         )
-        self.logger.debug(f"Received {len(resultset)} rows from {self.connection}")
-        # TODO: fix this part, is messed up again
-        return resultset
+        values = resultset.fetchall()
+        assert len(values) == 1
+        self.logger.debug(f"Received {len(values)} row from {self.connection}")
+        record = values[0]
+        return CovidData(location=record[1],
+                         total_cases=record[2],
+                         discharged=record[3],
+                         deaths=record[4],
+                         timestamp=record[5])
+
+    def reset_tables(self):
+        for i in self.tables:
+            self.logger.info("Dropping table {}".format(i.value))
+            self.tables[i].drop()
+        self.logger.info("Data resetted successfully!")

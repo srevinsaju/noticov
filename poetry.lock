@@ -250,6 +250,14 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "sqlalchemy-cockroachdb"
+version = "1.3.3"
+description = "CockroachDB adapter for SQLAlchemy"
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "trycourier"
 version = "1.8.0"
 description = "A Python Package for communicating with the Courier REST API."
@@ -288,7 +296,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "472b41d3333c2dc39111b13898890d4b786a8d1dc840bb825aa3d006d2592581"
+content-hash = "56685bc699481f5c569e86b949577f55dddff3b3831015457a9ef673911a02f4"
 
 [metadata.files]
 certifi = [
@@ -549,6 +557,10 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.14-cp39-cp39-win32.whl", hash = "sha256:a2c6e766410eebb0e7c4a839acce5534619f5d03bd2aabf44e0caf8b813613b9"},
     {file = "SQLAlchemy-1.4.14-cp39-cp39-win_amd64.whl", hash = "sha256:296a3b53e50c3d61ea22969b9d57937714e62f4bd7b5db7bb0afe80e8fbbe44c"},
     {file = "SQLAlchemy-1.4.14.tar.gz", hash = "sha256:fcea0af70a356fdff9efa917d33ec5a8538fe7bde3004ceded7377f1a97d8ef3"},
+]
+sqlalchemy-cockroachdb = [
+    {file = "sqlalchemy-cockroachdb-1.3.3.tar.gz", hash = "sha256:1f11d151f3a4f6798cd0e0da50e9c5fa7c1597195d08fd1eba93308ed5fa0cae"},
+    {file = "sqlalchemy_cockroachdb-1.3.3-py3-none-any.whl", hash = "sha256:78a3e898002ca7b307ec34633c925dd0e28bf4fc246713848069822d88c4f5c8"},
 ]
 trycourier = [
     {file = "trycourier-1.8.0-py3-none-any.whl", hash = "sha256:3a776c9f8bad59d6390b6d2ae315456763591911c8481657470317d0144e39d9"},

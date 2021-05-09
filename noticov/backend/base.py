@@ -52,7 +52,7 @@ class BaseConnection:
 
         return self.connection
 
-    def get_all_covid_data(self, table: Tables, location: str):
+    def get_all_covid_data(self, table: Tables, location: str) -> CovidDataList:
         """
         Gets all the covid data from the database
         :param table:
@@ -64,7 +64,7 @@ class BaseConnection:
         """
         raise NotImplementedError
 
-    def get_latest_covid_data(self, table: Tables, location: str):
+    def get_latest_covid_data(self, table: Tables, location: str) -> CovidData:
         """
         Gets the last saved covid data
         :param table:
