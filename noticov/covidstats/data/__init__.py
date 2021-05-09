@@ -1,5 +1,6 @@
 import time
 from enum import Enum
+from typing import Dict, Optional
 
 
 class CovidData:
@@ -19,6 +20,15 @@ class CovidData:
             self.timestamp = int(time.time())
         else:
             self.timestamp = timestamp
+
+    def to_dict(self) -> Dict[str, Optional[int, str]]:
+        return {
+            "timestamp": self.timestamp,
+            "location": self.location,
+            "total_cases": self.total_cases,
+            "deaths": self.deaths,
+            "discharged": self.discharged,
+        }
 
     @property
     def new_cases_today(self):
