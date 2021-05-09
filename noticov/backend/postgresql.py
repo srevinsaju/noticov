@@ -1,7 +1,8 @@
 import uuid
-from typing import List, Dict, Optional
+from typing import Dict, Optional
 
 from sqlalchemy import create_engine
+from sqlalchemy import desc
 from sqlalchemy import Table, Column, String, MetaData, Integer
 
 from noticov.backend.base import BaseConnection
@@ -17,6 +18,9 @@ class PostgreSQLConnection(BaseConnection):
     def __init__(self, destination: str = None):
         super().__init__()
         self.db = create_engine(destination)
+        if destination.startswith("cockroach"):
+            self.logger.info("Detected CockroachDB psql database string")
+
         self.conn = self.db.connect()
         self.meta = MetaData(self.db)
         self.tables: Dict[Tables, Table] = dict()
@@ -62,16 +66,8 @@ class PostgreSQLConnection(BaseConnection):
         for data in data_sequence:
             self.add_data(data, table)
 
-    def get_all_covid_data(self, table: Tables, location: str) -> CovidDataList:
-        # TODO: looks sus.. pls fix someone 🥺🥺🥺
-        where_expression = self.tables[table].c.loc == location
-
-        resultset = self.conn.execute(
-            self.tables[table].select().where(where_expression)
-        )
-
+    def _parse_psql_result_set(self, resultset) -> CovidDataList:
         values = resultset.fetchall()
-        assert len(values) == 1
         self.logger.debug(f"Received {len(values)} row from {self.connection}")
         cdl = CovidDataList()
         for record in values:
@@ -86,6 +82,28 @@ class PostgreSQLConnection(BaseConnection):
             )
         return cdl
 
+    def get_all_covid_data(self, table: Tables, location: str) -> CovidDataList:
+        # TODO: looks sus.. pls fix someone 🥺🥺🥺
+        where_expression = self.tables[table].c.loc == location
+
+        resultset = self.conn.execute(
+            self.tables[table].select().where(where_expression)
+        )
+
+        cdl = self._parse_psql_result_set(resultset)
+        return cdl
+
+    def get_top_covid_cases(self, table: Tables) -> CovidDataList:
+        resultset = self.conn.execute(
+            self.tables[table].select()
+                .order_by(desc(CovidDataAttr.TIMESTAMP.value))
+                .order_by(desc(CovidDataAttr.TOTAL_CASES.value))
+                .limit(7)
+        )
+
+        cdl = self._parse_psql_result_set(resultset)
+        return cdl
+
     def get_latest_covid_data(
         self, table: Tables, location: str
     ) -> Optional[CovidData]:
@@ -96,7 +114,7 @@ class PostgreSQLConnection(BaseConnection):
             self.tables[table]
             .select()
             .where(where_expression)
-            .order_by(CovidDataAttr.TIMESTAMP.value)
+            .order_by(desc(CovidDataAttr.TIMESTAMP.value))
             .limit(1)
         )
         values = resultset.fetchall()

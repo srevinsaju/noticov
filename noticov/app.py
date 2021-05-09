@@ -72,7 +72,7 @@ class NotiCovBackend:
                 return
 
 
-def main():
+def initialize() -> NotiCovBackend:
     logger = make_logger("main")
     load_dotenv()
     setup_logging()
@@ -100,4 +100,9 @@ def main():
     notifier = CourierNotifier(token=os.getenv("COURIER_AUTH_TOKEN"))
 
     ncb = NotiCovBackend(connection=psql, sleep=sleep_time, notifier=notifier)
+    return ncb
+
+
+def main():
+    ncb = initialize()
     ncb.start()
