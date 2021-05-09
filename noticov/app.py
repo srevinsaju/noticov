@@ -14,7 +14,7 @@ class NotiCovBackend:
     def __init__(
         self,
         connection: BaseConnection = None,
-        sleep: int = 60 * 60,
+        sleep: int = 60 * 30,
     ):
         self.sleep = sleep
         self.conn = connection
