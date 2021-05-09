@@ -26,6 +26,12 @@ def country_summary():
     return jsonify({"success": True, "data": total_cases})
 
 
+@app.route("/api/in/latest")
+def country_summary_latest():
+    data = ncb.conn.get_latest_covid_data(Tables.INDIA, location=Countries.INDIA.value)
+    return jsonify({"success": True, "data": data.to_dict()})
+
+
 @app.route("/api/in/top_covid_cases")
 def top_covid_cases():
     data = ncb.conn.get_top_covid_cases(Tables.INDIA)

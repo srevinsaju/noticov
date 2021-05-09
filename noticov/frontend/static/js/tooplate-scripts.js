@@ -182,26 +182,31 @@ function drawPieChart() {
       }
     };
 
-    configPie = {
-      type: "pie",
-      data: {
-        datasets: [
-          {
-            data: [18.24, 6.5, 9.15],
-            backgroundColor: ["#F7604D", "#4ED6B8", "#A8D582"],
-            label: "Storage"
-          }
-        ],
-        labels: [
-          "Used Storage (18.240GB)",
-          "System Storage (6.500GB)",
-          "Available Storage (9.150GB)"
-        ]
-      },
-      options: optionsPie
-    };
+    $.getJSON( "/api/in/latest", function( data ) {
 
-    pieChart = new Chart(ctxPie, configPie);
+      console.log(data);
+      configPie = {
+        type: "pie",
+        data: {
+          datasets: [
+            {
+              data: [ data.data["deaths"],  data.data["total_cases"],  data.data["discharged"]],
+              backgroundColor: ["#F7604D", "#4ED6B8", "#A8D582"],
+              label: "Storage"
+            }
+          ],
+          labels: [
+            "Deaths",
+            "Total Cases",
+            "Discharged"
+          ]
+        },
+        options: optionsPie
+      };
+
+      pieChart = new Chart(ctxPie, configPie);
+    })
+
   }
 }
 
