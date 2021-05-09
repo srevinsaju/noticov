@@ -41,34 +41,22 @@ const runAnimations = () => {
 	const countupEls = document.querySelectorAll( '.countup' );
 	countupEls.forEach( animateCountUp );
 
-	$.getJSON("/api/in/latest/states", function (data) {
+	$.getJSON("/api/in/resources/states", function (data) {
 	  let i = 0
 
 	  data.data.forEach(function (cd) {
-	    let status_condition = ""
-        if (cd["total_cases"] > cd["discharged"]) {
-          status_condition = "worse"
-        } else {
-          status_condition = "getting better"
-        }
-        let d = new Date(0);
-        let today = new Date();
-        d.setUTCSeconds(cd["timestamp"]);
+
 
         $("#current_status").append(
               `
             <tr>
                 <th scope="row"><b>#${i}</b></th>
-                <td>
-                    <div class="tm-status-circle moving">
-                    </div>${status_condition}
-                </td>
                 <td><b>${cd["location"]}</b></td>
+                <td><b>${cd["rural_beds"]}</b></td>
+                <td>${cd["rural_hospitals"]}</td>
+                <td><b>${cd["urban_beds"]}</b></td>
+                <td>${cd["urban_hospitals"]}</td>
                 
-                <td><b>${cd["total_cases"]}/b></td>
-                <td>${cd["deaths"]}</td>
-                <td>${cd["discharged"]}</td>
-                <td>${timeDifference(today.getMilliseconds(), d.getMilliseconds())}</td>
             </tr>
               `
           )

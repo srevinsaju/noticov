@@ -18,7 +18,7 @@ default_arguments = {
 
 
 @app.route("/api/in/resources/states")
-def states_latest():
+def states_resources_latest():
     data = IndiaResourcesDistrictsCovidApi().get_data()
     total_cases = []
     for i in data:
@@ -28,7 +28,7 @@ def states_latest():
 
 
 @app.route("/api/in/resources/country")
-def states_latest():
+def country_resources_latest():
     data = IndiaResourcesDistrictsCovidApi().get_data()
     total_sum = 0
     for i in data:

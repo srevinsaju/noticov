@@ -25,7 +25,7 @@ class IndiaResourcesDistrictsCovidApi(BaseCovidApi):
         # loop through all regions
         for region in regional_data:
             cd = MedicalBedsAvailable(
-                location=region.get("loc"),
+                location=region.get("state"),
                 rural_hospitals=region.get("ruralHospitals"),
                 rural_beds=region.get("ruralBeds"),
                 urban_beds=region.get("urbanBeds"),
@@ -34,7 +34,7 @@ class IndiaResourcesDistrictsCovidApi(BaseCovidApi):
             covid_data_list.push(cd)
 
         cd = MedicalBedsAvailable(
-            location="India",
+            location=Countries.INDIA.value,
             rural_hospitals=_data["summary"].get("ruralHospitals"),
             rural_beds=_data["summary"].get("ruralBeds"),
             urban_beds=_data["summary"].get("urbanBeds"),
