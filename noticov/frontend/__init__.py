@@ -16,7 +16,7 @@ default_arguments = {
     "app_name": "noticov",
 }
 
-
+/api/in/resources/states
 @app.route("/api/in/resources/states")
 def states_latest():
     data = IndiaResourcesDistrictsCovidApi().get_data()
@@ -81,8 +81,13 @@ def available_states():
 @app.route("/")
 def main():
     data = ncb.conn.get_latest_covid_data(Tables.INDIA, Countries.INDIA.value)
+    resource_data = IndiaResourcesDistrictsCovidApi().get_data()
+    hospital_beds = 0
+    for i in resource_data:
+        hospital_beds += i.rural_beds + i.urban_beds
+
     return render_template(
-        "index.html", coviddata=data, hospital_beds=0, **default_arguments
+        "index.html", coviddata=data, hospital_beds=hospital_beds, **default_arguments
     )
 
 
