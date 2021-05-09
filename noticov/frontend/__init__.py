@@ -29,6 +29,14 @@ def top_covid_cases():
         "data": total_cases
     })
 
+@app.route("/api/in/states")
+def available_states():
+    data = ncb.conn.get_available_states_countries(Tables.INDIA)
+    return jsonify({
+        "success": True,
+        "data": data
+    })
+
 
 @app.route("/")
 def main():

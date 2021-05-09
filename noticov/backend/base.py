@@ -42,6 +42,9 @@ class BaseConnection:
         """
         raise NotImplementedError
 
+    def get_available_states_countries(self, table: Tables) -> List[str]:
+        raise NotImplementedError
+
     @property
     def get_connection_type(self):
         """

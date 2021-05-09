@@ -1,5 +1,5 @@
 import uuid
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 from sqlalchemy import create_engine
 from sqlalchemy import desc
@@ -103,6 +103,15 @@ class PostgreSQLConnection(BaseConnection):
 
         cdl = self._parse_psql_result_set(resultset)
         return cdl
+
+    def get_available_states_countries(self, table: Tables) -> List[str]:
+        resultset = self.conn.execute(
+            self.tables[table].select()
+                .distinct(self.tables[table].c.loc)
+                .order_by(CovidDataAttr.LOCATION.value)
+        )
+
+        return [record[1] for record in resultset.fetchall()]
 
     def get_latest_covid_data(
         self, table: Tables, location: str
